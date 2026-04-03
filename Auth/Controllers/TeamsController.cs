@@ -23,7 +23,7 @@ namespace Auth.Controllers
 
         private async Task<string> UploadFile(IFormFile file)
         {
-            string uploadFolder = Path.Combine(_env.WebRootPath, "Images");
+            string uploadFolder = Path.Combine(_env.ContentRootPath, "wwwroot", "Images");
 
             if (!Directory.Exists(uploadFolder))
                 Directory.CreateDirectory(uploadFolder);
@@ -99,7 +99,7 @@ namespace Auth.Controllers
 
             _db.Players.RemoveRange(team.Players);
             team.Players = tvm.Players.Select(name => new Player { PlayerName = name }).ToList();
-            
+
             await _db.SaveChangesAsync();
             return Ok(team);
         }
@@ -111,7 +111,7 @@ namespace Auth.Controllers
 
             if (team == null)
                 return NotFound();
-            
+
             _db.Players.RemoveRange(team.Players);
             _db.Teams.Remove(team);
             _db.SaveChanges();
