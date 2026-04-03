@@ -18,12 +18,18 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Build and Publish
-        run: dotnet publish ./Auth/Auth.csproj -c Release -o ./publish_folder
-
       - name: Deploy to Azure
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'first-deploy-test'
           publish-profile: ${{ secrets.PRACTICE_DEPLOY_AZURE_PROFILE }}
           package: ./publish_folder
+
+      - name: Install EF Core CLI
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Generate SQL Script
+        run: dotnet ef migrations script --idempotent --output ./migrate.sql --project ./Auth/Auth.csproj
+
+      - name: Build and Publish
+        run: dotnet publish ./Auth/Auth.csproj -c Release -o ./publish_folder

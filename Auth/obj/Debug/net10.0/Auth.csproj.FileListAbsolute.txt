@@ -271,3 +271,4 @@
 /home/remon/RiderProjects/Practice_Deploy_Azure/Auth/bin/Debug/net10.0/tr/Microsoft.CodeAnalysis.Scripting.resources.dll
 /home/remon/RiderProjects/Practice_Deploy_Azure/Auth/bin/Debug/net10.0/zh-Hans/Microsoft.CodeAnalysis.Scripting.resources.dll
 /home/remon/RiderProjects/Practice_Deploy_Azure/Auth/bin/Debug/net10.0/zh-Hant/Microsoft.CodeAnalysis.Scripting.resources.dll
+/home/remon/RiderProjects/Practice_Deploy_Azure/Auth/obj/Debug/net10.0/Auth.sourcelink.json
