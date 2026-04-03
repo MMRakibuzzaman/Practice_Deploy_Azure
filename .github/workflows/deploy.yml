@@ -3,7 +3,7 @@ name: Deploy .NET API to Azure
 on:
   push:
     branches:
-      - master # Note: Change this to 'master' if that is your default branch name
+      - master
 
 jobs:
   build-and-deploy:
@@ -18,18 +18,24 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Deploy to Azure
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'first-deploy-test'
-          publish-profile: ${{ secrets.PRACTICE_DEPLOY_AZURE_PROFILE }}
-          package: ./publish_folder
-
       - name: Install EF Core CLI
         run: dotnet tool install --global dotnet-ef
 
       - name: Generate SQL Script
         run: dotnet ef migrations script --idempotent --output ./migrate.sql --project ./Auth/Auth.csproj
 
+      - name: Update Azure Database
+        uses: azure/sql-action@v2.2
+        with:
+          connection-string: ${{ secrets.PRACTICE_DEPLOY_AZURE_CONNECTION_STRING }}
+          path: './migrate.sql'
+
       - name: Build and Publish
-        run: dotnet publish ./Auth/Auth.csproj -c Release -o ./publish_folder
+        run: dotnet publish ./Auth/Auth.csproj -c Release -o release_folder
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'first-deploy-test'
+          publish-profile: ${{ secrets.PRACTICE_DEPLOY_AZURE_PROFILE }}
+          package: release_folder
