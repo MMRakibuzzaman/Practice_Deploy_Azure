@@ -1,0 +1,29 @@
+name: Deploy .NET API to Azure
+
+on:
+  push:
+    branches:
+      - master # Note: Change this to 'master' if that is your default branch name
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build and Publish
+        run: dotnet publish -c Release -o ./publish_folder
+
+      - name: Deploy to Azure
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'first-deploy-test'
+          publish-profile: ${{ secrets.PRACTICE_DEPLOY_AZURE_PROFILE }}
+          package: ./publish_folder
